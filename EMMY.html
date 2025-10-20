@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KDA Success Hub - Student Achievements</title>
+    <!-- Load Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom styles for background and font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #264a5500; /* Light background for contrast */
+        }
+
+        /* Define primary colors */
+        .kda-primary { background-color: #1e8a3e; } /* Deep Blue */
+        .kda-accent { color: #fa8f15; } /* Gold Yellow */
+
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #93c5fd;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #60bcfa00;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Header & Navigation -->
+    <header class="kda-primary shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo/Title -->
+                <a href="#" class="text-white text-2xl font-extrabold tracking-tight flex items-center">
+                    <span class="kda-accent text-3xl mr-2">KDA</span> 
+                </a>
+
+                <!-- Navigation Links -->
+                <nav class="hidden md:flex space-x-6">
+                    <a href="#featured" class="text-white hover:text-yellow-300 transition duration-150">Achievements</a>
+                    <a href="#profiles" class="text-white hover:text-yellow-300 transition duration-150">Profiles</a>
+                    <a href="#gallery" class="text-white hover:text-yellow-300 transition duration-150">Gallery</a>
+                    <a href="#news" class="text-white hover:text-yellow-300 transition duration-150">News</a>
+                    <a href="#" class="text-yellow-300 hover:text-white border border-yellow-300 px-3 py-1 rounded-full text-sm transition duration-150" onclick="showAdminMessage(event)">Admin Panel</a>
+                </nav>
+
+                <!-- Search and Mobile Menu Button -->
+                <div class="flex items-center space-x-4">
+                    <div class="hidden sm:block relative">
+                        <input type="text" placeholder="Search achievements..." id="search-input"
+                               class="py-1.5 pl-10 pr-4 rounded-full text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-black-300 transition duration-150">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500"></i>
+                    </div>
+
+                    <!-- Mobile Menu Button -->
+                    <button class="md:hidden text-white" id="mobile-menu-button">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu (Hidden by default) -->
+    <div class="md:hidden kda-primary text-white hidden" id="mobile-menu">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            <a href="#featured" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-800">Achievements</a>
+            <a href="#profiles" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-800">Profiles</a>
+            <a href="#gallery" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-800">Gallery</a>
+            <a href="#news" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-800">News</a>
+            <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-yellow-300 hover:bg-blue-800" onclick="showAdminMessage(event)">Admin Panel</a>
+        </div>
+    </div>
+
+
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden pt-16 pb-24 bg-cover bg-center" style="background-image: url('https://placehold.co/1200x500/1E3A8A/FFFFFF?text=KDA+Excellence+Celebration');">
+        <!-- Overlay -->
+        <div class="absolute inset-0 bg-blue-900 opacity-70"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+            <h1 class="text-5xl md:text-7xl font-extrabold leading-tight tracking-tight mt-8 mb-4">
+                Celebrating <span class="kda-accent">Excellence</span> at KDA
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
+                Discover the hard work, dedication, and success stories of our amazing students—from academics to arts and athletics.
+            </p>
+            <a href="#featured" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-xl text-blue-900 bg-yellow-300 hover:bg-yellow-400 transition duration-300 transform hover:scale-105">
+                Explore Achievements <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Success Message Modal (Non-alert replacement) -->
+    <div id="message-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 z-[9999] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 text-center transform scale-95 transition-all duration-300 ease-out">
+            <div id="modal-icon" class="text-4xl mx-auto mb-4"></div>
+            <h3 id="modal-title" class="text-xl font-bold mb-2 text-gray-900"></h3>
+            <p id="modal-content" class="text-gray-600 mb-6"></p>
+            <button id="close-modal" class="kda-primary text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition">Close</button>
+        </div>
+    </div>
+
+    <!-- Achievement Page Section -->
+    <section id="featured" class="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-extrabold text-blue-900">Featured Student Achievements</h2>
+            <p class="text-lg text-gray-600 mt-2">The latest and greatest highlights from our champions.</p>
+        </div>
+
+        <!-- Filter/Tabs -->
+        <div class="flex justify-center flex-wrap gap-3 mb-10" id="filter-tabs">
+            <button data-category="all" class="filter-btn bg-blue-900 text-white px-5 py-2 rounded-full font-medium shadow-md transition duration-200 hover:bg-blue-700">All Categories</button>
+            <button data-category="academic" class="filter-btn bg-white text-blue-900 px-5 py-2 rounded-full font-medium shadow-md border border-blue-200 hover:bg-blue-50 transition duration-200">Academic</button>
+            <button data-category="sports" class="filter-btn bg-white text-blue-900 px-5 py-2 rounded-full font-medium shadow-md border border-blue-200 hover:bg-blue-50 transition duration-200">Sports</button>
+            <button data-category="arts" class="filter-btn bg-white text-blue-900 px-5 py-2 rounded-full font-medium shadow-md border border-blue-200 hover:bg-blue-50 transition duration-200">Arts & Culture</button>
+            <button data-category="leadership" class="filter-btn bg-white text-blue-900 px-5 py-2 rounded-full font-medium shadow-md border border-blue-200 hover:bg-blue-50 transition duration-200">Leadership</button>
+        </div>
+
+        <!-- Achievement Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="achievement-container">
+
+            <!-- Card 1: Academic -->
+            <div data-category="academic" class="achievement-card bg-white rounded-xl shadow-xl overflow-hidden transform hover:scale-[1.02] transition duration-300 group">
+                <img src="image/4.jpg" alt="Science Fair Winner" class="limited-size">
+                <div class="p-6">
+                    <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full mb-3">Academic</span>
+                    <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition duration-300">EMMY. Wins National Science Fair</h3>
+                    <p class="text-gray-600 mt-2 text-sm">Grade 11 student EMMY. took first place in the National STEM competition for his innovative project on sustainable energy. </p>
+                    <a href="#" class="mt-4 text-blue-600 font-semibold flex items-center hover:text-blue-800 transition">
+                        Read Full Story <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 2: Sports -->
+            <div data-category="sports" class="achievement-card bg-white rounded-xl shadow-xl overflow-hidden transform hover:scale-[1.02] transition duration-300 group">
+                <img src="image/BASKET.png" alt="Basketball Champions" limited-size">
+                <div class="p-6">
+                    <span class="inline-block bg-red-100 text-red-800 text-xs font-semibold px-3 py-1 rounded-full mb-3">Sports</span>
+                    <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition duration-300">KDA Basketball Team Secures Regional Title</h3>
+                    <p class="text-gray-600 mt-2 text-sm">A thrilling overtime win secured the first Regional Championship for the KDA Varsity Basketball team in five years under help of team captain KENNY!</p>
+                    <a href="#" class="mt-4 text-blue-600 font-semibold flex items-center hover:text-blue-800 transition">
+                        Read Full Story <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 3: Arts -->
+            <div data-category="arts" class="achievement-card bg-white rounded-xl shadow-xl overflow-hidden transform hover:scale-[1.02] transition duration-300 group">
+                
+               
+                <img src="image/GIDEON.png" alt="Art Showcase Winner" class="limited-size">
+                <div class="p-6">
+                    <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full mb-3">Arts & Culture</span>
+                    <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition duration-300">GIDEON Sculpture Selected for City Gallery</h3>
+                    <p class="text-gray-600 mt-2 text-sm">Grade 11 student GIDEON original metal sculpture, "Ascension," will be displayed downtown for a month.</p>
+                    <a href="#" class="mt-4 text-blue-600 font-semibold flex items-center hover:text-blue-800 transition">
+                        Read Full Story <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 4: Leadership -->
+            <div data-category="leadership" class="achievement-card bg-white rounded-xl shadow-xl overflow-hidden transform hover:scale-[1.02] transition duration-300 group">
+            
+                <img src="image/david.png" alt="Leadership Award" class="limited-size">
+                <div class="p-6">
+                    <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full mb-3">Leadership</span>
+                    <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition duration-300">Community Impact Award for Student Council</h3>
+                    <p class="text-gray-600 mt-2 text-sm">The Student Council raised over $10,000 for local charities, earning them the prestigious Community Impact Award.</p>
+                    <a href="#" class="mt-4 text-blue-600 font-semibold flex items-center hover:text-blue-800 transition">
+                        Read Full Story <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </a>
+                </div>
+            </div>
+
+             <!-- Card 5: Academic -->
+            <div data-category="academic" class="achievement-card bg-white rounded-xl shadow-xl overflow-hidden transform hover:scale-[1.02] transition duration-300 group">
+                <img src="image/munanasi.png" alt="Academic Excellence" class="limited-size">
+                <div class="p-6">
+                    <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full mb-3">Academic</span>
+                    <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition duration-300">PRECIOUS KDA Student Achieve Perfect Scores</h3>
+                    <p class="text-gray-600 mt-2 text-sm">Congratulations to PRECIOUS for scoring maximum marks in her recent Advanced Placement exams!</p>
+                    <a href="#" class="mt-4 text-blue-600 font-semibold flex items-center hover:text-blue-800 transition">
+                        Read Full Story <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </a>
+                </div>
+            </div>
+
+             <!-- Card 6: Sports -->
+            <div data-category="sports" class="achievement-card bg-white rounded-xl shadow-xl overflow-hidden transform hover:scale-[1.02] transition duration-300 group">
+                <img src="image/BRIAN.png" alt="Track and Field" class="limited-size">
+                <div class="p-6">
+                    <span class="inline-block bg-red-100 text-red-800 text-xs font-semibold px-3 py-1 rounded-full mb-3">Sports</span>
+                    <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition duration-300">BRIAN.N Breaks School Running Record</h3>
+                    <p class="text-gray-600 mt-2 text-sm">Star runner BRIAN.N. set a new KDA record in the 400m dash, qualifying for the State Championships.</p>
+                    <a href="#" class="mt-4 text-blue-600 font-semibold flex items-center hover:text-blue-800 transition">
+                        Read Full Story <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-12">
+            <button class="bg-blue-900 text-white px-8 py-3 rounded-full font-semibold shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105">
+                View All Achievements
+            </button>
+        </div>
+    </section>
+
+    <!-- Student Profiles Section -->
+    <section id="profiles" class="py-16 md:py-24 bg-blue-50/70">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-extrabold text-blue-900">Spotlight: Student Profiles</h2>
+                <p class="text-lg text-gray-600 mt-2">Meet the individuals driving change and making an impact.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Profile 1 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition duration-300">
+                    <img src="image/emmy1.jpg" alt="Student Profile" class="w-28 h-28 rounded-full mx-auto object-cover border-4 border-yellow-300 mb-4">
+                    <h3 class="text-xl font-bold text-gray-900">EMMY</h3>
+                    <p class="text-sm text-gray-500">Grade 12, IT GUY</p>
+                    <p class="mt-3 text-gray-700 text-sm">Accepted into MIT for Computer Science. Founder of the KDA Robotics Club.</p>
+                    <a href="#" class="mt-4 inline-block text-blue-600 font-medium text-sm hover:underline">View Profile</a>
+                </div>
+
+                <!-- Profile 2 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition duration-300">
+                    <img src="image/emmy2.jpg" alt="Student Profile" class="w-28 h-28 rounded-full mx-auto object-cover border-4 border-yellow-300 mb-4">
+                    <h3 class="text-xl font-bold text-gray-900">kax</h3>
+                    <p class="text-sm text-gray-500">Grade 11, sport prefect</p>
+                    <p class="mt-3 text-gray-700 text-sm">Won the school Championship .</p>
+                    <a href="#" class="mt-4 inline-block text-blue-600 font-medium text-sm hover:underline">View Profile</a>
+                </div>
+
+                <!-- Profile 3 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition duration-300">
+                    <img src="image/Dave.png" alt="Student Profile" class="w-28 h-28 rounded-full mx-auto object-cover border-4 border-yellow-300 mb-4">
+                    <h3 class="text-xl font-bold text-gray-900">Dave</h3>
+                    <p class="text-sm text-gray-500">Grade 11, head of prefects </p>
+                    <p class="mt-3 text-gray-700 text-sm">he has been to KDA since primary so he was working cloder with administration and helping his friends in day to day activitie.</p>
+                    <a href="#" class="mt-4 inline-block text-blue-600 font-medium text-sm hover:underline">View Profile</a>
+                </div>
+
+                <!-- Profile 4 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition duration-300">
+                    <img src="image/nick.jpg" alt="Student Profile" class="w-28 h-28 rounded-full mx-auto object-cover border-4 border-yellow-300 mb-4">
+                    <h3 class="text-xl font-bold text-gray-900">NICK RWABUGIZZY</h3>
+                    <p class="text-sm text-gray-500">Grade 11, Volley ball Captain</p>
+                    <p class="mt-3 text-gray-700 text-sm">Led the school volleyball team to a Divisional Final. Known for his sportsmanship and dedication.</p>
+                    <a href="#" class="mt-4 inline-block text-blue-600 font-medium text-sm hover:underline">View Profile</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photo and Video Gallery -->
+    <section id="gallery" class="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-extrabold text-blue-900">Gallery of Success</h2>
+            <p class="text-lg text-gray-600 mt-2">Relive the moments that made us proud. [Image of Gold trophy] </p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <!-- Photo 1 -->
+            <div class="relative group rounded-lg overflow-hidden shadow-lg aspect-square">
+                <img src="image/grad.png" alt="Gallery Image" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                    <span class="text-white text-lg font-semibold">Graduation Ceremony</span>
+                </div>
+            </div>
+            <!-- Video 1 -->
+            <div class="relative group rounded-lg overflow-hidden shadow-lg aspect-square">
+                <img src="video/" alt="Gallery Video" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                 <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                    <i data-lucide="play-circle" class="w-12 h-12 text-white opacity-80 group-hover:opacity-100 transition duration-300"></i>
+                    <span class="absolute bottom-2 right-3 text-xs text-white bg-black/50 px-2 py-0.5 rounded">Video</span>
+                </div>
+            </div>
+            <!-- Photo 2 -->
+            <div class="relative group rounded-lg overflow-hidden shadow-lg aspect-square">
+                <img src="image/logo.png" alt="Gallery Image" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                    <span class="text-white text-lg font-semibold">Annual School Play and best logo of the school</span>
+                </div>
+            </div>
+            <!-- Photo 3 -->
+            <div class="relative group rounded-lg overflow-hidden shadow-lg aspect-square">
+                <img src="image/opening day.png" alt="Gallery Image" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                    <span class="text-white text-lg font-semibold">Community Outreach Day on the first day our students work together with the scools to make it clean so this is the opening day of the school</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-10">
+            <button class="bg-dark or black-300 text-blue-900 px-6 py-2 rounded-full font-semibold shadow-lg hover:bg-yellow-400 transition duration-300">
+                View All Gallery Items
+            </button>
+        </div>
+    </section>
+
+
+    <!-- News and Updates -->
+    <section id="news" class="py-16 md:py-24 bg-gray-100/70">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+             <div class="text-center mb-12">
+                <h2 class="text-4xl font-extrabold text-blue-900">School News & Updates</h2>
+                <p class="text-lg text-gray-600 mt-2">Stay informed about the latest happenings at KDA.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- News 1 -->
+                <article class="bg-white rounded-xl shadow-md p-5 hover:shadow-xl transition duration-300">
+                    <p class="text-sm text-gray-500 mb-2">October 15, 2025</p>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Principal's Message: Focus to KDA users</h4>
+                    <p class="text-gray-600 text-sm">EDUCATION is the key to succes and king david academy we eare the light to succes and dreams our children and country in general</p>
+                    <a href="#" class="mt-3 inline-block text-blue-600 font-medium text-sm hover:underline">Read More</a>
+                </article>
+
+                <!-- News 2 -->
+                <article class="bg-white rounded-xl shadow-md p-5 hover:shadow-xl transition duration-300">
+                    <p class="text-sm text-gray-500 mb-2">October 10, 2025</p>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">DIRECTOR OF DISCPLINE</h4>
+                    <p class="text-gray-600 text-sm">JESUS IS THE CHRIST ! and i would like to start with my point telling about the level of discpline in king david academy so there is nothing you can offer without discpline so discpline comes first in our school and that's why the level of discpline is high in our school.So any student from king david academy he or she must be having high level of dicpline without discpline and GOD in king david academy just kow that you are in wrong place THANKS!</p>
+                    <a href="#" class="mt-3 inline-block text-blue-600 font-medium text-sm hover:underline">Read More</a>
+                </article>
+
+                <!-- News 3 -->
+                <article class="bg-white rounded-xl shadow-md p-5 hover:shadow-xl transition duration-300">
+                    <p class="text-sm text-gray-500 mb-2">September 28, 2025</p>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">SPORTS AND OTHER ACTIVITIES</h4>
+                    <p class="text-gray-600 text-sm">Thanks to the generous community, we successfully raised swimming pools and different games and sports for evey student such games and sports are basket ball</p>
+                    <a href="#" class="mt-3 inline-block text-blue-600 font-medium text-sm hover:underline">Read More</a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="kda-primary text-white py-10 mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <p class="text-lg font-semibold">&copy; 2025 KDA Success Hub. All rights reserved.</p>
+                <div class="flex justify-center space-x-4 mt-3">
+                    <a href="#" class="text-yellow-300 hover:text-white transition">Privacy Policy</a>
+                    <a href="#" class="text-yellow-300 hover:text-white transition">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // --- Message Modal Functions ---
+        const modal = document.getElementById('message-modal');
+        const closeModalButton = document.getElementById('close-modal');
+
+        function showMessage(title, content, type = 'info') {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-content').textContent = content;
+            const iconDiv = document.getElementById('modal-icon');
+            iconDiv.innerHTML = ''; // Clear existing icon
+
+            let iconHtml;
+            if (type === 'admin') {
+                iconHtml = '<i data-lucide="lock" class="w-10 h-10 text-red-500 mx-auto"></i>';
+            } else if (type === 'search') {
+                iconHtml = '<i data-lucide="alert-triangle" class="w-10 h-10 text-yellow-500 mx-auto"></i>';
+            } else {
+                 iconHtml = '<i data-lucide="check-circle" class="w-10 h-10 text-blue-500 mx-auto"></i>';
+            }
+            iconDiv.innerHTML = iconHtml;
+            lucide.createIcons(); // Re-render lucide icons
+
+            modal.classList.remove('hidden');
+        }
+
+        closeModalButton.addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+
+        // Function for the Admin Panel link (replaces alert/confirm)
+        function showAdminMessage(event) {
+            event.preventDefault(); // Stop navigation
+            showMessage(
+                "Admin Access Required",
+                "The Admin Panel is a secured area for school staff to upload, edit, and manage achievements. This mock link demonstrates the feature.",
+                "admin"
+            );
+        }
+
+        // --- Mobile Menu Toggle ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // --- Filter/Tab Logic ---
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const achievementCards = document.querySelectorAll('.achievement-card');
+        const achievementContainer = document.getElementById('achievement-container');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const category = button.getAttribute('data-category');
+
+                // 1. Update active button style
+                filterButtons.forEach(btn => {
+                    btn.classList.remove('bg-blue-900', 'text-white', 'hover:bg-blue-700');
+                    btn.classList.add('bg-white', 'text-blue-900', 'border', 'border-blue-200', 'hover:bg-blue-50');
+                });
+                button.classList.add('bg-blue-900', 'text-white', 'hover:bg-blue-700');
+                button.classList.remove('bg-white', 'text-blue-900', 'border', 'border-blue-200', 'hover:bg-blue-50');
+
+                // 2. Filter cards
+                achievementCards.forEach(card => {
+                    const cardCategory = card.getAttribute('data-category');
+                    if (category === 'all' || cardCategory === category) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        // Set 'All Categories' as active on load
+        document.querySelector('.filter-btn[data-category="all"]').click();
+
+        // --- Simple Search Logic ---
+        const searchInput = document.getElementById('search-input');
+        searchInput.addEventListener('input', () => {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            let found = false;
+
+            // Ensure 'All Categories' is active when searching
+            document.querySelector('.filter-btn[data-category="all"]').click();
+
+            achievementCards.forEach(card => {
+                const cardText = card.textContent.toLowerCase();
+                if (cardText.includes(searchTerm)) {
+                    card.classList.remove('hidden');
+                    found = true;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            // Show message if search yields no results
+            if (!found && searchTerm.length > 0) {
+                 showMessage(
+                    "No Results Found",
+                    `We couldn't find any achievements matching "${searchInput.value}". Try a different keyword or category.`,
+                    "search"
+                );
+            }
+        });
+
+    </script>
+</body>
+</html>
